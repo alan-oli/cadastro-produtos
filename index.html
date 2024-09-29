@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,6 +42,7 @@
         form div {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         input {
@@ -51,7 +53,8 @@
             width: 100%;
         }
 
-        button, select {
+        button,
+        select {
             width: 120px;
             height: 40px;
             border-radius: 10px;
@@ -74,7 +77,7 @@
             gap: 30px;
             align-items: center;
         }
-        
+
         .card {
             width: 80%;
             letter-spacing: 2px;
@@ -83,7 +86,7 @@
             background-color: #404040;
             border-radius: 10px;
             box-shadow: 1px 1px 20px black,
-                        -1px -1px 20px black;
+                -1px -1px 20px black;
             transition: transform 2s ease;
         }
 
@@ -93,40 +96,55 @@
         }
 
         @media screen and (max-width: 1000px) {
+
             body {
                 flex-direction: column;
                 align-items: center;
                 gap: 5px;
+                min-width: 355px;
             }
 
             form {
                 width: 100%;
+                font-size: 1.2rem;
+                max-width: auto;
+            }
+
+            input {
+                font-size: 1.2rem;
             }
 
             #lista {
                 width: 100%;
             }
-        }
 
+            .card {
+                width: 100%;
+            }
+
+        }
     </style>
 </head>
+
 <body>
 
     <form id="form">
 
         <div>
             <label for="nome">Nome do produto:</label>
-            <input type="text" id="nome" name="nome" autofocus placeholder="ex... Televisão" autocomplete="off" required>
+            <input type="text" id="nome" name="nome" autofocus placeholder="ex... Televisão" autocomplete="off"
+                required>
         </div>
 
         <div>
             <label for="descricao">Descrição do produto:</label>
-            <input type="text" id="descricao" name="descricao" placeholder="ex... Marca Samsung" autocomplete="off" required>
+            <input type="text" id="descricao" name="descricao" placeholder="ex... Marca Samsung" autocomplete="off"
+                required>
         </div>
 
         <div>
             <label for="valor">Valor do produto</label>
-            <input type="number" id="valor" name="valor" min="0" placeholder="ex... 2500,90" autocomplete="off" required stpe="00000000.01">
+            <input type="number" id="valor" name="valor" min="0" placeholder="ex... 2500,90" autocomplete="off" required step="000000.01">
         </div>
 
         <div>
@@ -193,12 +211,14 @@
             for (const [key, value] of dadosForm) {
 
                 produto[key] = value
-                
+
             }
 
             produtos.push(produto)
 
             produtosRender()
+
+            console.log(produtos)
 
             form.reset()
 
@@ -216,30 +236,33 @@
             produtos.forEach(produto => {
 
                 //Pequeno capricho para deixar o valor do produto parecido com o tipo moeda
+
+                console.log(produto)
+
                 produto.valor = parseFloat(produto.valor).toFixed(2)
-                
+
                 const divCard = document.createElement('div')
                 divCard.classList.add('card')
-    
+
                 const nome = document.createElement('p')
                 nome.textContent = `Produto: ${produto.nome}`
-    
+
                 const descricao = document.createElement('p')
                 descricao.textContent = `Descrição: ${produto.descricao}`
-    
+
                 const valor = document.createElement('p')
                 valor.textContent = `Valor: R$${produto.valor}`
-                
+
                 const disponivel = document.createElement('p')
 
-                if(produto.valor == 'true') {
+                if(produto.disponivel === 'true') {
                     disponivel.textContent = `Situação: Disponível`
                 } else {
                     disponivel.textContent = `Situação: Indisponível`
-                } 
-    
+                }
+
                 divCard.append(nome, descricao, valor, disponivel)
-    
+
                 document.querySelector('#lista').append(divCard)
 
             });
@@ -259,6 +282,7 @@
 
     <!-- Aqui vou disponibilizar o link para o Live Site desse projeto de cadastro -> https://alan-oli.github.io/cadastro-produtos -->
 
-    
+
 </body>
+
 </html>
