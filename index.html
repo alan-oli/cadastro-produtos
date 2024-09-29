@@ -231,7 +231,12 @@
                 valor.textContent = `Valor: R$${produto.valor}`
                 
                 const disponivel = document.createElement('p')
-                disponivel.textContent = `Situação: ${produto.disponivel ? 'Disponível' : 'Indisponível'}` 
+
+                if(produto.valor == 'true') {
+                    disponivel.textContent = `Situação: Disponível`
+                } else {
+                    disponivel.textContent = `Situação: Indisponível`
+                } 
     
                 divCard.append(nome, descricao, valor, disponivel)
     
