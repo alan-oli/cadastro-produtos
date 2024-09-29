@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e listagem de produtos</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        body {
+            flex-direction: row;
+            min-height: 100vh;
+            min-width: 100vw;
+            background-color: #282828;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            overflow-x: hidden;
+        }
+
+        form {
+            margin-top: 30px;
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            font-size: 1.5rem;
+            padding: 50px;
+            max-width: 800px;
+            max-height: 550px;
+            flex: 1 0 500px;
+        }
+
+        form div {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.3rem;
+            width: 100%;
+        }
+
+        button, select {
+            width: 120px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
+
+        button {
+            margin-top: 30px;
+            border: 1px solid black;
+            cursor: pointer;
+            align-self: center;
+        }
+
+        #lista {
+            padding: 50px;
+            width: 50%;
+            flex: 1 1 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .card {
+            width: 80%;
+            letter-spacing: 2px;
+            padding: 20px;
+            font-size: 1.3rem;
+            background-color: #404040;
+            border-radius: 10px;
+            box-shadow: 1px 1px 20px black,
+                        -1px -1px 20px black;
+            transition: transform 2s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.1);
+            transition: transform .5s ease;
+        }
+
+        @media screen and (max-width: 1000px) {
+            body {
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+
+            form {
+                width: 100%;
+            }
+
+            #lista {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <form id="form">
+
+        <div>
+            <label for="nome">Nome do produto:</label>
+            <input type="text" id="nome" name="nome" autofocus placeholder="ex... Televisão" autocomplete="off" required>
+        </div>
+
+        <div>
+            <label for="descricao">Descrição do produto:</label>
+            <input type="text" id="descricao" name="descricao" placeholder="ex... Marca Samsung" autocomplete="off" required>
+        </div>
+
+        <div>
+            <label for="valor">Valor do produto</label>
+            <input type="number" id="valor" name="valor" min="0" placeholder="ex... 0.00" autocomplete="off" required>
+        </div>
+
+        <div>
+
+            <label for="disponivel">Disponível para venda: </label>
+
+            <select name="disponivel" id="disponivel" required>
+                <option value="" selected disabled>Selecione:</option>
+                <option value=true>Sim</option>
+                <option value=false>Não</option>
+            </select>
+
+        </div>
+
+        <button>Cadastrar</button>
+
+    </form>
+
+    <section id="lista">
+        <h2>Lista de Produtos</h2>
+    </section>
+
+    <script>
+
+        //Array de produtos, inseri alguns demos para dar maior volume a listagem
+        let produtos = [
+
+            {
+                nome: 'demo - Computador',
+                descricao: 'demo - Processador ryzen 5 5600g',
+                valor: 3000,
+                disponivel: true
+            },
+
+            {
+                nome: 'demo - Mouse',
+                descricao: 'demo - Logitech',
+                valor: 80,
+                disponivel: false
+            },
+
+            {
+                nome: 'demo - Teclado Office',
+                descricao: 'demo - Dell',
+                valor: 115,
+                disponivel: true
+            },
+
+
+        ]
+
+        const form = document.querySelector('#form')
+
+        //EventListener direto no form aguardando um envio de formulário
+
+        form.addEventListener('submit', (ev) => {
+
+            ev.preventDefault()
+
+            let produto = {}
+
+            const dadosForm = new FormData(form)
+
+            for (const [key, value] of dadosForm) {
+
+                produto[key] = value
+                
+            }
+
+            produtos.push(produto)
+
+            produtosRender()
+
+            console.log(produtos)
+
+        })
+
+        //Função que renderia os produtos na lista
+        function produtosRender() {
+
+            //antes de inseri-los na pagina removemos os antigos para renderização atualizada
+            document.querySelectorAll('.card').forEach(card => card.remove())
+
+            produtos.sort((anterior, posterior) => anterior.valor - posterior.valor)
+
+            //para cada produto no array de produtos estou criando um card com suas respectivas propriedades como: Nome, Valor, etc...
+            produtos.forEach(produto => {
+
+                //Pequeno capricho para deixar o valor do produto parecido com o tipo moeda
+                produto.valor = parseFloat(produto.valor).toFixed(2)
+                
+                const divCard = document.createElement('div')
+                divCard.classList.add('card')
+    
+                const nome = document.createElement('p')
+                nome.textContent = `Produto: ${produto.nome}`
+    
+                const descricao = document.createElement('p')
+                descricao.textContent = `Descrição: ${produto.descricao}`
+    
+                const valor = document.createElement('p')
+                valor.textContent = `Valor: R$${produto.valor}`
+                
+                const disponivel = document.createElement('p')
+                disponivel.textContent = `Situação: ${produto.disponivel ? 'Disponível' : 'Indisponível'}` 
+    
+                divCard.append(nome, descricao, valor, disponivel)
+    
+                document.querySelector('#lista').append(divCard)
+
+            });
+
+
+        }
+
+    </script>
+
+    <!-- Feito por Alan Oliveira -->
+
+    <!-- Espero que analisem com carinho, estou iniciando minha carreira como desenvolvedor, gostaria muito de uma oportunidade de estágio, fico no aguardo de contato -->
+
+    <!-- https://linkedin.com/in/alan-oli -->
+
+    <!-- https://github.com/alan-oli -->
+
+    <!-- Aqui vou disponibilizar o link para o Live Site desse projeto de cadastro -> https://alan-oli.github.io/cadastro-produtos -->
+
+    
+</body>
+</html>
